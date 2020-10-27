@@ -11,6 +11,9 @@ class RecipesViewController: UICollectionViewController {
   
   private let reuseIdentifier = "RecipeCell"
   let apiClient = ApiClient()
+  var recipes = [RecipeModel]()
+  
+  private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,10 +30,11 @@ class RecipesViewController: UICollectionViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(true)
     
-    apiClient.loadRandomRecipes(9) { (result) in
+    apiClient.search("burger") { (result) in
       switch result {
       case .success(let recipes):
-        print(recipes)
+        self.recipes = recipes
+        print(recipes.count)
       case .failure(let error):
         print(error)
       
@@ -52,18 +56,19 @@ class RecipesViewController: UICollectionViewController {
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+      
+        return 1
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 0
+      return recipes.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
+      cell.backgroundColor = .blue
         // Configure the cell
     
         return cell
