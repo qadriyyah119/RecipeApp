@@ -10,6 +10,8 @@ import Foundation
 enum RecipeError: Error {
   case invalidStatus
   case invalidData
+  case decodingError
+  case invalidId
 }
 
 class ApiClient {
@@ -29,7 +31,6 @@ class ApiClient {
       components.host = host
       components.path = "/recipes/random"
       components.queryItems = [
-        //URLQueryItem(name: "apiKey", value: apiKey),
         URLQueryItem(name: "number", value: "\(number)")
       ]
       
@@ -61,8 +62,13 @@ class ApiClient {
       }
   
       let decoder = JSONDecoder()
-      let recipes = try? decoder.decode([RecipeModel].self, from: data)
-      completion?(.success(recipes ?? []))
+      do {
+      let recipes = try decoder.decode(RandomRecipeResults.self, from: data) //ask Marquis if this is the best way to grab this data
+        completion?(.success(recipes.recipes))
+      } catch let exception {
+        print(exception.localizedDescription)
+        completion?(.failure(RecipeError.decodingError))
+      }
     }
     task.resume()
   }
@@ -104,12 +110,61 @@ class ApiClient {
         }
     
         let decoder = JSONDecoder()
-        let recipes = try? decoder.decode([RecipeModel].self, from: data)
-        completion?(.success(recipes ?? []))
+        do{
+        let recipes = try decoder.decode(RecipeSearchResults.self, from: data)
+          completion?(.success(recipes.results))
+        } catch let exception {
+          print(exception.localizedDescription)
+          completion?(.failure(RecipeError.decodingError))
+        }
       }
       task.resume()
     }
     
+  func searchRecipeById(_ id: Int, completion: ((Result<RecipeModel, RecipeError>) -> Void)?) {
+    var searchByIdURL: URL {
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = host
+        components.path = "/recipes/\(id)/information"
+        
+        print(components.url!)
+        return components.url!
+      }
+    let request = NSMutableURLRequest(url: searchByIdURL)
+    request.httpMethod = "GET"
+    request.allHTTPHeaderFields = headers
+    
+    let configuration = URLSessionConfiguration.default
+    configuration.waitsForConnectivity = true
+    let session = URLSession(configuration: configuration)
+    
+    let task = session.dataTask(with: request as URLRequest) {
+      
+      (data, response, error) in
+      
+      guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+        completion?(.failure(RecipeError.invalidStatus))
+        return
+      }
+      
+      guard let data = data else {
+        completion?(.failure(RecipeError.invalidData))
+        
+        return
+      }
+  
+      let decoder = JSONDecoder()
+      do{
+      let recipe = try decoder.decode(RecipeModel.self, from: data)
+        completion?(.success(recipe))
+      } catch let exception {
+        print(exception.localizedDescription)
+        completion?(.failure(RecipeError.invalidId))
+      }
+    }
+    task.resume()
+  }
     
   }
 

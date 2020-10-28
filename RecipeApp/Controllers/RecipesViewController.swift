@@ -30,11 +30,10 @@ class RecipesViewController: UICollectionViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(true)
     
-    apiClient.search("burger") { (result) in
+    apiClient.searchRecipeById(636601) { (result) in
       switch result {
       case .success(let recipes):
-        self.recipes = recipes
-        print(recipes.count)
+        print(recipes)
       case .failure(let error):
         print(error)
       
