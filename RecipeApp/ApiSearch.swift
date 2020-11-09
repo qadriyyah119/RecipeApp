@@ -5,7 +5,8 @@
 //  Created by Qadriyyah Griffin on 10/22/20.
 //
 
-import Foundation
+import UIKit
+
 
 enum RecipeError: Error {
   case invalidStatus
@@ -63,7 +64,7 @@ class ApiClient {
   
       let decoder = JSONDecoder()
       do {
-      let recipes = try decoder.decode(RandomRecipeResults.self, from: data) //ask Marquis if this is the best way to grab this data
+      let recipes = try decoder.decode(RandomRecipeResults.self, from: data)
         completion?(.success(recipes.recipes))
       } catch let exception {
         print(exception.localizedDescription)
@@ -165,7 +166,22 @@ class ApiClient {
     }
     task.resume()
   }
-    
+  
+  func downloadRecipeImage(_ imageURL: String, completion:((Result<UIImage?, RecipeError>) -> Void)?) {
+    if let url = URL(string: imageURL) {
+      let task = URLSession.shared.dataTask(with: url) {
+        (data, response, error) in
+        
+        guard let data = data else {
+          completion?(.failure(RecipeError.invalidData))
+          return
+        }
+          completion?(.success(UIImage(data: data)))
+      }
+      task.resume()
+    }
+  }
+  
   }
 
 

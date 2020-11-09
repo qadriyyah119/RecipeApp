@@ -7,11 +7,16 @@
 
 import UIKit
 
-class RecipesViewController: UICollectionViewController {
+class RecipesViewController: UICollectionViewController, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating{
   
   private let reuseIdentifier = "RecipeCell"
   let apiClient = ApiClient()
   var recipes = [RecipeModel]()
+  var searches: [RecipeModel] = []
+  private let itemsPerRow: CGFloat = 3
+  
+  //initializing UISearchController with nil, I'm telling the search controller that I'm using the same view to search and display the results
+  let searchController = UISearchController(searchResultsController: nil)
   
   private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
 
@@ -22,21 +27,39 @@ class RecipesViewController: UICollectionViewController {
         // self.clearsSelectionOnViewWillAppear = false
 
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+//        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "RecipeCell")
 
-        // Do any additional setup after loading the view.
+        searchController.delegate = self
+        searchController.searchBar.delegate = self
+        searchController.searchResultsUpdater = self
+        
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        
+        searchController.searchBar.placeholder = "Search Recipes"
+        
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
     }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(true)
     
-    apiClient.searchRecipeById(636601) { (result) in
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(true)
+    
+    apiClient.loadRandomRecipes(9) { (result) in
       switch result {
-      case .success(let recipes):
-        print(recipes)
       case .failure(let error):
-        print(error)
-      
+        print("Error loading: \(error)")
+      case .success(let recipes):
+        print("Found \(recipes.count) recipes")
+        self.recipes = recipes
+        DispatchQueue.main.async {
+          self.collectionView.reloadData()
+        }
       }
     }
   }
@@ -50,26 +73,45 @@ class RecipesViewController: UICollectionViewController {
         // Pass the selected object to the new view controller.
     }
     */
+  
+  var isSearchBarEmpty: Bool {
+    return searchController.searchBar.text?.isEmpty ?? true
+  }
 
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-      
-        return 1
+      return 1
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
       return recipes.count
+      
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecipeCell", for: indexPath) as! RecipePhotoCell
+      
+      let randomRecipe = recipes[indexPath.row]
+      
       cell.backgroundColor = .blue
         // Configure the cell
-    
+      if let imageURL = randomRecipe.image{
+        apiClient.downloadRecipeImage(imageURL) {result in
+          switch result {
+          case .failure(let error):
+            print("Photo failure: \(error)")
+          case .success(let image):
+            DispatchQueue.main.async {
+              cell.imageView.image = image
+            }
+          }
+        }
+      }else {
+        cell.imageView.image = UIImage(named: "imagePlaceholdeer")
+      }
         return cell
     }
 
@@ -103,5 +145,50 @@ class RecipesViewController: UICollectionViewController {
     
     }
     */
+  
+  
+  func searchText(_ searchText: String) {
+    apiClient.search(searchText) { (result) in
+      switch result {
+      case .failure(let error):
+        print("Error Searching: \(error)")
+      case .success(let recipes):
+        print("Found \(recipes.count) matching \(searchText)")
+        self.searches.insert(contentsOf: recipes, at: 0)
+        
+//        DispatchQueue.main.async{
+//        self.collectionView?.reloadData()
+//        }
+      }
+    }
+  }
+  
+  func updateSearchResults(for searchController: UISearchController) {
+    let searchBar = searchController.searchBar
+    searchText(searchBar.text!)
+  }
 
+}
+
+extension RecipesViewController: UICollectionViewDelegateFlowLayout {
+  
+  //1 responsible for telling the layout the size of a given cell
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    //2
+    let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
+    let availableWidth = view.frame.width - paddingSpace
+    let widthPerItem = availableWidth / itemsPerRow
+    
+    return CGSize(width: widthPerItem, height: widthPerItem)
+  }
+  
+  //3 returns the spacing between the cells, headers, and footers
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    return sectionInsets
+  }
+  
+  //4 controls the spacing between each line in the layout. Matches the padding at left and right
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    return sectionInsets.left
+  }
 }

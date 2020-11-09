@@ -8,6 +8,10 @@
 import Foundation
 
 struct RecipeSearchResults: Decodable {
-  let totalResults: Int
-  let results: [RecipeModel]
+  var totalResults: Int
+  var results: [RecipeModel]
+  
+  mutating func addResults(result: [RecipeModel]){
+    results.append(contentsOf: result)
+  }
 }
