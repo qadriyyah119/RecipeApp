@@ -25,6 +25,7 @@
 		18D89C692540B4EE00142415 /* RecipesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D89C682540B4ED00142415 /* RecipesViewController.swift */; };
 		18D89C752541054F00142415 /* RecipeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D89C742541054F00142415 /* RecipeModel.swift */; };
 		18D89C7B25413E4900142415 /* ApiSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D89C7A25413E4800142415 /* ApiSearch.swift */; };
+		2D501726255A3B4400399EC8 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D501725255A3B4400399EC8 /* UIViewExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		18D89C682540B4ED00142415 /* RecipesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesViewController.swift; sourceTree = "<group>"; };
 		18D89C742541054F00142415 /* RecipeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeModel.swift; sourceTree = "<group>"; };
 		18D89C7A25413E4800142415 /* ApiSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiSearch.swift; sourceTree = "<group>"; };
+		2D501725255A3B4400399EC8 /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				18CDE2642538EA6600EA2E5D /* AppDelegate.swift */,
 				18CDE2662538EA6600EA2E5D /* SceneDelegate.swift */,
 				18CDE2702538EABD00EA2E5D /* Assets.xcassets */,
+				2D501724255A3B0100399EC8 /* Extensions */,
 				18608BAE25508BFA002757C7 /* Views */,
 				186AE5B3253EF094000D574C /* Model */,
 				18D89C6D2540B50300142415 /* Controllers */,
@@ -188,6 +191,14 @@
 				18D89C682540B4ED00142415 /* RecipesViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		2D501724255A3B0100399EC8 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2D501725255A3B4400399EC8 /* UIViewExtensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -328,6 +339,7 @@
 				18608BBE25508D55002757C7 /* RecipePhotoCell.swift in Sources */,
 				186AE5CB253EF800000D574C /* UserProfile+CoreDataClass.swift in Sources */,
 				18D89C7B25413E4900142415 /* ApiSearch.swift in Sources */,
+				2D501726255A3B4400399EC8 /* UIViewExtensions.swift in Sources */,
 				18608BA02548FDAF002757C7 /* RandomRecipeResults.swift in Sources */,
 				18CDE2672538EA6600EA2E5D /* SceneDelegate.swift in Sources */,
 				18D89C692540B4EE00142415 /* RecipesViewController.swift in Sources */,
