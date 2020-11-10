@@ -13,7 +13,7 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
   let apiClient = ApiClient()
   var recipes = [RecipeModel]()
   var searches: [RecipeModel] = []
-  private let itemsPerRow: CGFloat = 3
+  private let itemsPerRow: CGFloat = 2
   
   //initializing UISearchController with nil, I'm telling the search controller that I'm using the same view to search and display the results
   let searchController = UISearchController(searchResultsController: nil)
@@ -95,9 +95,10 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecipeCell", for: indexPath) as! RecipePhotoCell
       
       let randomRecipe = recipes[indexPath.row]
-      
-      cell.backgroundColor = .blue
-        // Configure the cell
+        
+      if let title = randomRecipe.title {
+        cell.recipeTitleLabel.text = title
+      }
       if let imageURL = randomRecipe.image{
         apiClient.downloadRecipeImage(imageURL) {result in
           switch result {
@@ -178,8 +179,9 @@ extension RecipesViewController: UICollectionViewDelegateFlowLayout {
     let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
     let availableWidth = view.frame.width - paddingSpace
     let widthPerItem = availableWidth / itemsPerRow
+    let heightPerItem = widthPerItem + 3
     
-    return CGSize(width: widthPerItem, height: widthPerItem)
+    return CGSize(width: widthPerItem, height: heightPerItem)
   }
   
   //3 returns the spacing between the cells, headers, and footers

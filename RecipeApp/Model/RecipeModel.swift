@@ -9,7 +9,7 @@ import Foundation
 
 struct RecipeModel: Decodable {
   let id: Int
-  let title: String
+  let title: String?
   let readyInMinutes: Int
   let image: String?
 }
