@@ -122,12 +122,15 @@ class ApiClient {
       task.resume()
     }
     
-  func searchRecipeById(_ id: Int, completion: ((Result<RecipeModel, RecipeError>) -> Void)?) {
+  func searchRecipeById(_ id: Int, completion: ((Result<RecipeDetailModel, RecipeError>) -> Void)?) {
     var searchByIdURL: URL {
         var components = URLComponents()
         components.scheme = scheme
         components.host = host
         components.path = "/recipes/\(id)/information"
+        components.queryItems = [
+          URLQueryItem(name: "includeNutrition", value: "true")
+        ]
         
         print(components.url!)
         return components.url!
@@ -157,7 +160,7 @@ class ApiClient {
   
       let decoder = JSONDecoder()
       do{
-      let recipe = try decoder.decode(RecipeModel.self, from: data)
+      let recipe = try decoder.decode(RecipeDetailModel.self, from: data)
         completion?(.success(recipe))
       } catch let exception {
         print(exception.localizedDescription)

@@ -13,6 +13,7 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
   let apiClient = ApiClient()
   var recipes = [RecipeModel]()
   var searches: [RecipeModel] = []
+  var recipeDetails: RecipeDetailModel!
   private let itemsPerRow: CGFloat = 2
   
   //initializing UISearchController with nil, I'm telling the search controller that I'm using the same view to search and display the results
@@ -62,6 +63,16 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
         }
       }
     }
+    
+    apiClient.searchRecipeById(479101) {(result) in
+    switch result {
+    case .failure(let error):
+        print("Error loading: \(error)")
+    case .success(let recipes):
+        print(recipes)
+        //self.recipes = recipes
+    }
+    }
   }
 
     /*
@@ -77,6 +88,14 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
   var isSearchBarEmpty: Bool {
     return searchController.searchBar.text?.isEmpty ?? true
   }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        guard segue.identifier == "showRecipeDetail",
+//              let recipeCell = sender as? RecipePhotoCell,
+//              let recipeDetailController = segue.destination as? RecipeDetailViewController,
+//              let indexPath = collectionView.indexPath(for: recipeCell),
+//              let recipe
+    }
 
     // MARK: UICollectionViewDataSource
 
@@ -117,6 +136,16 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
     }
 
     // MARK: UICollectionViewDelegate
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let recipeId = recipes[indexPath.row]
+        
+        let detailVC = RecipeDetailViewController()
+        detailVC.recipe = recipeId
+        navigationController?.pushViewController(detailVC, animated: true)
+        
+        
+    }
 
     /*
     // Uncomment this method to specify if the specified item should be highlighted during tracking
