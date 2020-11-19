@@ -9,13 +9,13 @@ import Foundation
 
 struct RecipeDetailModel: Decodable {
     let id: Int
-    let title: String
-    let readyInMinutes: Int
-    let servings: Int
+    let title: String?
+    let readyInMinutes: Int?
+    let servings: Int?
     let sourceUrl: String?
     let image: String?
     let nutrition: Nutrition
-    let dishTypes: [String]
+    let dishTypes: [String]?
     let instructions: String
 }
 

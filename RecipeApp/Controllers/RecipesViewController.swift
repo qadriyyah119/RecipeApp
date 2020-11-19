@@ -23,7 +23,7 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+    
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -88,14 +88,6 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
   var isSearchBarEmpty: Bool {
     return searchController.searchBar.text?.isEmpty ?? true
   }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        guard segue.identifier == "showRecipeDetail",
-//              let recipeCell = sender as? RecipePhotoCell,
-//              let recipeDetailController = segue.destination as? RecipeDetailViewController,
-//              let indexPath = collectionView.indexPath(for: recipeCell),
-//              let recipe
-    }
 
     // MARK: UICollectionViewDataSource
 
@@ -138,11 +130,25 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
     // MARK: UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let recipeId = recipes[indexPath.row]
+        let recipeId = recipes[indexPath.row].id
         
-        let detailVC = RecipeDetailViewController()
-        detailVC.recipe = recipeId
-        navigationController?.pushViewController(detailVC, animated: true)
+        apiClient.searchRecipeById(recipeId) {(result) in
+        switch result {
+        case .failure(let error):
+            print("Error loading: \(error)")
+        case .success(let recipes):
+            print(recipes)
+            DispatchQueue.main.async {
+            let detailVC = RecipeDetailVC()
+            detailVC.recipe = recipes
+            self.navigationController?.pushViewController(detailVC, animated: true)
+                }
+            }
+        }
+        
+//        let detailVC = RecipeDetailVC()
+//        detailVC.recipe = recipeId
+//        navigationController?.pushViewController(detailVC, animated: true)
         
         
     }
