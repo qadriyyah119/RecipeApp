@@ -63,16 +63,6 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
         }
       }
     }
-    
-    apiClient.searchRecipeById(479101) {(result) in
-    switch result {
-    case .failure(let error):
-        print("Error loading: \(error)")
-    case .success(let recipes):
-        print(recipes)
-        //self.recipes = recipes
-    }
-    }
   }
 
     /*
@@ -139,7 +129,7 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
         case .success(let recipes):
             print(recipes)
             DispatchQueue.main.async {
-            let detailVC = RecipeDetailVC()
+            let detailVC = RecipeDetailVC(collectionViewLayout: UICollectionViewFlowLayout())
             detailVC.recipe = recipes
             self.navigationController?.pushViewController(detailVC, animated: true)
                 }

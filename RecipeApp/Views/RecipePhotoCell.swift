@@ -15,7 +15,8 @@ class RecipePhotoCell: UICollectionViewCell {
         super.awakeFromNib()
         
         imageView.addRoundedCornersAndShadow()
-        recipeTitleLabel.textColor = UIColor.black 
+        recipeTitleLabel.font = UIFont(name: Theme.mainFontName, size: 14)
+        recipeTitleLabel.textColor = UIColor.black
     }
     
 }
