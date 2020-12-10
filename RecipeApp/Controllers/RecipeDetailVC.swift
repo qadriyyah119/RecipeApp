@@ -7,12 +7,12 @@
 
 import UIKit
 
-private let reuseIdentifier = "Cell"
-
 class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     fileprivate let headerID = "headerId"
     fileprivate let titleCell = "titleCell"
+    fileprivate let ingredientsCell = "ingredientsCell"
+    fileprivate let instructionsCell = "instructionsCell"
     fileprivate let padding: CGFloat = 16
     
     var recipe: RecipeDetailModel!
@@ -28,16 +28,17 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         setupCollectionViewLayout()
         setupCollectionView()
 
-        // Do any additional setup after loading the view.
     }
     
     fileprivate func setupCollectionView() {
         collectionView.backgroundColor = .white
         collectionView.contentInsetAdjustmentBehavior = .never
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 15, right: 0)
         
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView!.register(RecipeIngredientsCell.self, forCellWithReuseIdentifier: ingredientsCell)
         self.collectionView!.register(RecipeDetailTitleCell.self, forCellWithReuseIdentifier: titleCell)
+        self.collectionView!.register(RecipeInstructionsCell.self, forCellWithReuseIdentifier: instructionsCell)
         self.collectionView!.register(RecipeDetailHeaderV.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerID)
     }
     
@@ -58,15 +59,13 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerID, for: indexPath) as! RecipeDetailHeaderV
-        
+        if indexPath.section == 0 {
         if let recipeTitle = recipe.title{
             header.recipeTitleLabel.text = recipeTitle
         }
-        
-        if let recipeCreditText = recipe.creditsText{
-            header.creditsTextLabel.text = recipeCreditText
-        }
-        
+            
+        header.dishTypeLabel.text = "BREAKFAST"
+                
         if let imageURL = recipe.image{
           apiClient.downloadRecipeImage(imageURL) {result in
             switch result {
@@ -79,31 +78,49 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
             }
           }
         }else {
-          header.imageView.image = UIImage(named: "imagePlaceholdeer")
+          header.imageView.image = UIImage(named: "imagePlaceholder")
+        }
+        } else if indexPath.section == 1 {
+            let ingredientsTitle = "INGREDIENTS"
+            header.ingredientsTitleLabel.text = ingredientsTitle
+        } else if indexPath.section == 2 {
+            let instructionsTitle = "INSTRUCTIONS"
+            header.instructionsTitleLabel.text = instructionsTitle
         }
         
         return header
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return .init(width: view.frame.width, height: 390)
+        
+        var headerHeight = CGSize()
+        
+        if section == 0 {
+            headerHeight = CGSize(width: view.frame.width, height: 420)
+        } else if section == 1 {
+            headerHeight = CGSize(width: view.frame.width, height: 35)
+        } else if section == 2 {
+            headerHeight = CGSize(width: view.frame.width, height: 35)
+        }
+        return headerHeight
     }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 2
+    
+        return 3
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         
         var sectionItems = Int()
         
         if section == 0 {
             sectionItems = 1
         } else if section == 1 {
-        sectionItems = 15
+            sectionItems = recipe.nutrition?.ingredients.count ?? 1
+        } else if section == 2 {
+            sectionItems = recipe.analyzedInstructions.count
         }
         return sectionItems
     }
@@ -113,48 +130,40 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         var cell = UICollectionViewCell()
         
         let cellA = collectionView.dequeueReusableCell(withReuseIdentifier: titleCell, for: indexPath) as! RecipeDetailTitleCell
-        let cellB = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cellB = collectionView.dequeueReusableCell(withReuseIdentifier: ingredientsCell, for: indexPath) as! RecipeIngredientsCell
+        let cellC = collectionView.dequeueReusableCell(withReuseIdentifier: instructionsCell, for: indexPath) as! RecipeInstructionsCell
         
         let section = indexPath.section
-        
+    
         if section == 0 {
-            //cellA.backgroundColor = .cyan
-            if let nutritionData = recipe.nutrition?.nutrients{
-                if let calorieIndex = nutritionData.firstIndex(where: {$0.title == "Calories"}) {
-                    let calorieAmount = nutritionData[calorieIndex].amount
-                    cellA.calorieTextView.text = """
-                        \(calorieAmount)
-                        Calories
-                        """
-                }
-                if let carbsIndex = nutritionData.firstIndex(where: { $0.title == "Carbohydrates"}) {
-                    let carbAmount = nutritionData[carbsIndex].amount
-                    cellA.carbsTextView.text = """
-                        \(carbAmount)
-                        Carbs
-                        """
-                }
-                if let proteinIndex = nutritionData.firstIndex(where: { $0.title == "Protein"}) {
-                    let proteinAmount = nutritionData[proteinIndex].amount
-                    cellA.proteinTextView.text = """
-                        \(proteinAmount)
-                        Protein
-                        """
-                }
-                if let fatIndex = nutritionData.firstIndex(where: { $0.title == "Fat"}) {
-                    let fatAmount = nutritionData[fatIndex].amount
-                    cellA.fatTextView.text = """
-                        \(fatAmount)
-                        Fat
-                        """
-                }
+            if let recipeServings = recipe.servings {
+                cellA.servingsImg.image = UIImage(named: "servingsImg")
+                cellA.servingsLabel.text = "\(recipeServings) Servings"
             }
+            
+            if let recipeTiming = recipe.readyInMinutes {
+                cellA.timingImg.image = UIImage(named: "timingImg")
+                cellA.timingLabel.text = "\(recipeTiming) Minutes"
+            }
+            
+            cellA.nutrition = recipe.nutrition
+    
             cell = cellA
             
         } else if section == 1 {
             
-            cellB.backgroundColor = .black
+            if recipe.nutrition?.ingredients.count != 0 {
+                if let ingredient = recipe.nutrition?.ingredients[indexPath.row] {
+                cellB.ingredientsLabel.text = "\(ingredient.amount) \(ingredient.unit) \(ingredient.name)"
+            } else {
+                cellB.ingredientsLabel.text = "Ingredients Error"
+                }
+            }
             cell = cellB
+        } else if section == 2 {
+            
+            cellC.backgroundColor = .red
+            cell = cellC
         }
         
         return cell
@@ -170,8 +179,10 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         var layoutSize = CGSize()
         
         if indexPath.section == 0 {
-            layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 250)
+            layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 135)
         } else if indexPath.section == 1 {
+            layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 40)
+        } else if indexPath.section == 2 {
             layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 50)
         }
         return layoutSize

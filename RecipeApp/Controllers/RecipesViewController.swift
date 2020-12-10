@@ -39,6 +39,8 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
         
         searchController.searchBar.placeholder = "Search Recipes"
         
+        navigationItem.backButtonTitle = ""
+//        navigationController?.navigationBar.tintColor = Theme.tintColor
         navigationItem.searchController = searchController
         definesPresentationContext = true
     }

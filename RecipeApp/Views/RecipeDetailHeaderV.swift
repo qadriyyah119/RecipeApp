@@ -7,6 +7,19 @@
 
 import UIKit
 
+enum DishTypes {
+    case breakfast, lunch, dinner, snack
+    
+    var title: String {
+        switch self {
+        case .breakfast: return "Breakfast"
+        case .lunch: return "Lunch"
+        case .dinner: return "Dinner"
+        case .snack: return "Snack"
+        }
+    }
+}
+
 class RecipeDetailHeaderV: UICollectionReusableView {
     
     let imageView: UIImageView = {
@@ -14,11 +27,22 @@ class RecipeDetailHeaderV: UICollectionReusableView {
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
+    
+    let dishTypeLabel: InsetLabel = {
+        let label = InsetLabel()
+        label.font = UIFont(name: Theme.titleFontName, size: 17)
+        label.textColor = Theme.accentColor
+        label.textAlignment = .center
+        label.contentInsets = UIEdgeInsets(top: 5, left: 2, bottom: 2, right: 2)
+        return label
+    }()
 
     let recipeTitleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.minimumScaleFactor = 0.5
+        label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
         label.font = UIFont(name: Theme.titleFontName, size: 25)
         label.textColor = UIColor.black
         return label
@@ -30,6 +54,30 @@ class RecipeDetailHeaderV: UICollectionReusableView {
         label.textColor = Theme.backgroundColor
         return label
     }()
+    
+    let creditsTitleButton: UIButton = {
+        let button = UIButton()
+        return button
+    }()
+    
+    let ingredientsTitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = UIFont(name: Theme.titleFontName, size: 25)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    let instructionsTitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = UIFont(name: Theme.titleFontName, size: 25)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    
+    
 
 
 
@@ -38,8 +86,11 @@ class RecipeDetailHeaderV: UICollectionReusableView {
         //custom code for layout
 
         addSubview(imageView)
+        addSubview(dishTypeLabel)
         addSubview(recipeTitleLabel)
         addSubview(creditsTextLabel)
+        addSubview(ingredientsTitleLabel)
+        addSubview(instructionsTitleLabel)
 
         setupView()
     }
@@ -48,6 +99,9 @@ class RecipeDetailHeaderV: UICollectionReusableView {
         setupImageView()
         setupRecipeTitleLabel()
         setupCreditsTextLabel()
+        setupIngredientsTitleLabel()
+        setupDishTypeLabel()
+        setupInstructionsTitleLabel()
 
     }
 
@@ -58,13 +112,20 @@ class RecipeDetailHeaderV: UICollectionReusableView {
         imageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 320).isActive = true
     }
+    
+    private func setupDishTypeLabel() {
+        dishTypeLabel.translatesAutoresizingMaskIntoConstraints = false
+        dishTypeLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10).isActive = true
+        dishTypeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        dishTypeLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+    }
 
     private func setupRecipeTitleLabel() {
         recipeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        recipeTitleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5).isActive = true
-        recipeTitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        recipeTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
-        recipeTitleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        recipeTitleLabel.topAnchor.constraint(equalTo: dishTypeLabel.bottomAnchor, constant: 10).isActive = true
+        recipeTitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        recipeTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+//        recipeTitleLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     private func setupCreditsTextLabel() {
@@ -73,6 +134,20 @@ class RecipeDetailHeaderV: UICollectionReusableView {
         creditsTextLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         creditsTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         creditsTextLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+    }
+    
+    private func setupIngredientsTitleLabel() {
+        ingredientsTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        ingredientsTitleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        ingredientsTitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        ingredientsTitleLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
+    }
+    
+    private func setupInstructionsTitleLabel() {
+        instructionsTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        instructionsTitleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        instructionsTitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        instructionsTitleLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
     }
 
     required init?(coder: NSCoder) {

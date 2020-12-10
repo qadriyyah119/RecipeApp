@@ -18,6 +18,7 @@ struct RecipeDetailModel: Decodable {
     let nutrition: Nutrition?
     let dishTypes: [String]?
     let instructions: String
+    let analyzedInstructions: [AnalyzedInstructions]
 }
 
 struct Nutrition: Decodable {
@@ -34,4 +35,13 @@ struct Ingredients: Decodable {
     let name: String
     let amount: Float
     let unit: String
+}
+
+struct AnalyzedInstructions: Decodable {
+    let steps: [Steps]
+}
+
+struct Steps: Decodable {
+    let number: Int
+    let step: String
 }

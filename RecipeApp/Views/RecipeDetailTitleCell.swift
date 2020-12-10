@@ -9,85 +9,167 @@ import UIKit
 
 class RecipeDetailTitleCell: UICollectionViewCell {
     
-    let calorieTextView: UITextView = {
-        let calorieTextView = UITextView()
-        calorieTextView.addNutritionViewSettings()
-        return calorieTextView
+    var nutrition: Nutrition?{
+        didSet{
+            calorieNutritionalView.nutritionValue.text = "\(Int(caloriesValue))"
+            calorieNutritionalView.nutritionTitle.text = NutritionValue.calories.title
+            carbsNutritionalView.nutritionValue.text = "\(Int(carbsValue))"
+            carbsNutritionalView.nutritionTitle.text = NutritionValue.carbohydrates.title
+            proteinNutritionalView.nutritionValue.text = "\(Int(proteinValue))"
+            proteinNutritionalView.nutritionTitle.text = NutritionValue.protein.title
+            fatNutritionalView.nutritionValue.text = "\(Int(fatValue))"
+            fatNutritionalView.nutritionTitle.text = NutritionValue.fat.title
+        }
+    }
+    
+    lazy var calorieNutritionalView: NutritionalView = {
+        let view = NutritionalView(value: caloriesValue, valueTitle: .calories)
+        return view
     }()
     
-    let carbsTextView: UITextView = {
-        let carbsTextView = UITextView()
-        carbsTextView.addNutritionViewSettings()
-        return carbsTextView
+    var caloriesValue: Float {
+        guard let calorieIndex = nutrition?.nutrients.firstIndex(where: {$0.title == NutritionValue.calories.title}) else { return 0 }
+        return nutrition?.nutrients[calorieIndex].amount ?? 0
+    }
+
+    lazy var carbsNutritionalView: NutritionalView = {
+        let view = NutritionalView(value: carbsValue, valueTitle: .carbohydrates)
+        return view
     }()
     
-    let proteinTextView: UITextView = {
-        let proteinTextView = UITextView()
-        proteinTextView.addNutritionViewSettings()
-        return proteinTextView
+    var carbsValue: Float {
+        guard let carbsIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.carbohydrates.title}) else { return 0 }
+        return nutrition?.nutrients[carbsIndex].amount ?? 0
+    }
+
+    lazy var proteinNutritionalView: NutritionalView = {
+        let view = NutritionalView(value: proteinValue, valueTitle: .protein)
+        return view
     }()
     
-    let fatTextView: UITextView = {
-        let fatTextView = UITextView()
-        fatTextView.addNutritionViewSettings()
-        return fatTextView
+    var proteinValue: Float {
+        guard let proteinIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.protein.title}) else { return 0 }
+        return nutrition?.nutrients[proteinIndex].amount ?? 0
+    }
+
+    lazy var fatNutritionalView: NutritionalView = {
+        let view = NutritionalView(value: fatValue, valueTitle: .fat)
+        return view
     }()
+    
+    var fatValue: Float {
+        guard let fatIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.fat.title}) else { return 0 }
+        return nutrition?.nutrients[fatIndex].amount ?? 0
+    }
+    
+    private var nutritionLabelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 16
+        return stackView
+    }()
+    
+    
+    let servingsLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: Theme.titleFontName, size: 15)
+        label.textColor = UIColor.black
+        label.minimumScaleFactor = 0.5
+        label.textAlignment = .left
+        return label
+    }()
+    
+    let servingsImg: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    private var servingsLabelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 10
+        return stackView
+    }()
+    
+    let timingLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: Theme.titleFontName, size: 15)
+        label.textColor = UIColor.black
+        label.minimumScaleFactor = 0.5
+        label.textAlignment = .left
+        return label
+    }()
+    
+    let timingImg: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    private var timingLabelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 10
+        return stackView
+    }()
+    
+    private var timingServingStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 10
+        return stackView
+    }()
+    
     
     
     override init(frame: CGRect) {
         super .init(frame: frame)
-        
-        let sView = UIStackView(arrangedSubviews: [calorieTextView, carbsTextView, proteinTextView, fatTextView])
-        sView.axis = .horizontal
-        sView.alignment = .fill
-        sView.distribution = .equalSpacing
-        sView.spacing = 10
-        
-        addSubview(sView)
-        sView.translatesAutoresizingMaskIntoConstraints = false
-        sView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        sView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        
+
         setupView()
     }
     
     private func setupView() {
-        setupCalorieView()
-        setupCarbsView()
-        setupProteinView()
-        setupFatView()
-    }
-    
-    private func setupStackView() {
+
+        nutritionLabelStackView.addArrangedSubview(calorieNutritionalView)
+        nutritionLabelStackView.addArrangedSubview(carbsNutritionalView)
+        nutritionLabelStackView.addArrangedSubview(proteinNutritionalView)
+        nutritionLabelStackView.addArrangedSubview(fatNutritionalView)
         
-    }
-    
-    private func setupCalorieView() {
-        calorieTextView.translatesAutoresizingMaskIntoConstraints = false
-        calorieTextView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        calorieTextView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        calorieTextView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-    }
-    
-    private func setupCarbsView() {
-        carbsTextView.translatesAutoresizingMaskIntoConstraints = false
-        carbsTextView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        carbsTextView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        carbsTextView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-    }
-    
-    private func setupProteinView() {
-        proteinTextView.translatesAutoresizingMaskIntoConstraints = false
-        proteinTextView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        proteinTextView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        proteinTextView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-    }
-    
-    private func setupFatView() {
-        fatTextView.translatesAutoresizingMaskIntoConstraints = false
-        fatTextView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        fatTextView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        fatTextView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        servingsLabelStackView.addArrangedSubview(servingsImg)
+        servingsLabelStackView.addArrangedSubview(servingsLabel)
+        timingLabelStackView.addArrangedSubview(timingImg)
+        timingLabelStackView.addArrangedSubview(timingLabel)
+        
+        timingServingStackView.addArrangedSubview(servingsLabelStackView)
+        timingServingStackView.addArrangedSubview(timingLabelStackView)
+        
+        nutritionLabelStackView.translatesAutoresizingMaskIntoConstraints = false
+        servingsLabelStackView.translatesAutoresizingMaskIntoConstraints = false
+        timingLabelStackView.translatesAutoresizingMaskIntoConstraints = false
+        timingServingStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(nutritionLabelStackView)
+        addSubview(timingServingStackView)
+        
+        NSLayoutConstraint.activate([
+            servingsImg.widthAnchor.constraint(equalToConstant: 15),
+            servingsImg.heightAnchor.constraint(equalToConstant: 15),
+            timingImg.widthAnchor.constraint(equalToConstant: 15),
+            timingImg.heightAnchor.constraint(equalToConstant: 15),
+            nutritionLabelStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            nutritionLabelStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            timingServingStackView.topAnchor.constraint(equalTo: topAnchor),
+            timingServingStackView.leadingAnchor.constraint(equalTo: leadingAnchor)
+        ])
     }
     
     required init?(coder: NSCoder) {
