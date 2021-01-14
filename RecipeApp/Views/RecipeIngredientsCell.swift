@@ -19,16 +19,14 @@ class RecipeIngredientsCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super .init(frame: frame)
         
-        addSubview(ingredientsLabel)
-        setupIngredientsLabel()
+        setupView()
     }
     
-    
-    private func setupIngredientsLabel() {
-        ingredientsLabel.translatesAutoresizingMaskIntoConstraints = false
-        ingredientsLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        ingredientsLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        ingredientsLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+    private func setupView() {
+        
+        addSubview(ingredientsLabel)
+        
+        ingredientsLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor)
     }
     
     required init?(coder: NSCoder) {

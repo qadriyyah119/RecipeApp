@@ -30,10 +30,14 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
 
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     fileprivate func setupCollectionView() {
         collectionView.backgroundColor = .white
         collectionView.contentInsetAdjustmentBehavior = .never
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 15, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
         
         // Register cell classes
         self.collectionView!.register(RecipeIngredientsCell.self, forCellWithReuseIdentifier: ingredientsCell)
@@ -48,6 +52,7 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
                 layout.sectionInset = .init(top: self.padding, left: padding, bottom: padding, right: padding)
             }
         }
+        
         // Layout customization
 //        if let layout = collectionViewLayout as? UICollectionViewFlowLayout {
 //            layout.sectionInset = .init(top: padding, left: padding, bottom: padding, right: padding)
@@ -60,11 +65,6 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerID, for: indexPath) as! RecipeDetailHeaderV
         if indexPath.section == 0 {
-        if let recipeTitle = recipe.title{
-            header.recipeTitleLabel.text = recipeTitle
-        }
-            
-        header.dishTypeLabel.text = "BREAKFAST"
                 
         if let imageURL = recipe.image{
           apiClient.downloadRecipeImage(imageURL) {result in
@@ -96,7 +96,7 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         var headerHeight = CGSize()
         
         if section == 0 {
-            headerHeight = CGSize(width: view.frame.width, height: 420)
+            headerHeight = CGSize(width: view.frame.width, height: 320)
         } else if section == 1 {
             headerHeight = CGSize(width: view.frame.width, height: 35)
         } else if section == 2 {
@@ -120,7 +120,8 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         } else if section == 1 {
             sectionItems = recipe.nutrition?.ingredients.count ?? 1
         } else if section == 2 {
-            sectionItems = recipe.analyzedInstructions.count
+            sectionItems = 1
+//            sectionItems = recipe.analyzedInstructions?[0].steps.count ?? 1
         }
         return sectionItems
     }
@@ -136,6 +137,17 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         let section = indexPath.section
     
         if section == 0 {
+            if let recipeTitle = recipe.title {
+                cellA.recipeTitleLabel.text = recipeTitle
+            }
+            
+            if let recipeCredits = recipe.creditsText {
+                
+//                cellA.creditsTextLabel.text = "BY \(recipeCredits.uppercased())"
+                cellA.creditsTitleButton.setTitle("BY \(recipeCredits.uppercased())", for: .normal)
+                
+            }
+            
             if let recipeServings = recipe.servings {
                 cellA.servingsImg.image = UIImage(named: "servingsImg")
                 cellA.servingsLabel.text = "\(recipeServings) Servings"
@@ -161,8 +173,20 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
             }
             cell = cellB
         } else if section == 2 {
+            cellC.backgroundColor = .white
             
-            cellC.backgroundColor = .red
+            if let recipeInstructions = recipe.instructions {
+                cellC.instructionsTextLabel.text = recipeInstructions
+            }
+//            if recipe.analyzedInstructions?.count != 0 {
+//                if let recipeSteps = recipe.analyzedInstructions?[0].steps[indexPath.row] {
+//                    cellC.instructionsStepLabel.text = "Step \(recipeSteps.number)"
+//                    cellC.instructionsTextLabel.text = "\(recipeSteps.step)"
+//                } else {
+//                    cellC.instructionsTextLabel.text = "Instructions Error"
+//                }
+//            }
+
             cell = cellC
         }
         
@@ -179,11 +203,18 @@ class RecipeDetailVC: UICollectionViewController, UICollectionViewDelegateFlowLa
         var layoutSize = CGSize()
         
         if indexPath.section == 0 {
-            layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 135)
+            layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 235)
         } else if indexPath.section == 1 {
-            layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 40)
+            layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 22)
         } else if indexPath.section == 2 {
-            layoutSize = CGSize(width: view.frame.width - 2 * padding, height: 50)
+            if let instructions = recipe.instructions {
+                
+                let size = CGSize(width: view.frame.width - 2 * padding, height: 1000)
+                let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)]
+                
+                let estimatedFrame = NSString(string: instructions).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+                layoutSize = CGSize(width: view.frame.width - 2 * padding, height: estimatedFrame.height)
+            }
         }
         return layoutSize
     }

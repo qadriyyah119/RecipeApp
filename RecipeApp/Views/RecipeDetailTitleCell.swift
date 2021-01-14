@@ -12,13 +12,9 @@ class RecipeDetailTitleCell: UICollectionViewCell {
     var nutrition: Nutrition?{
         didSet{
             calorieNutritionalView.nutritionValue.text = "\(Int(caloriesValue))"
-            calorieNutritionalView.nutritionTitle.text = NutritionValue.calories.title
             carbsNutritionalView.nutritionValue.text = "\(Int(carbsValue))"
-            carbsNutritionalView.nutritionTitle.text = NutritionValue.carbohydrates.title
             proteinNutritionalView.nutritionValue.text = "\(Int(proteinValue))"
-            proteinNutritionalView.nutritionTitle.text = NutritionValue.protein.title
             fatNutritionalView.nutritionValue.text = "\(Int(fatValue))"
-            fatNutritionalView.nutritionTitle.text = NutritionValue.fat.title
         }
     }
     
@@ -28,7 +24,7 @@ class RecipeDetailTitleCell: UICollectionViewCell {
     }()
     
     var caloriesValue: Float {
-        guard let calorieIndex = nutrition?.nutrients.firstIndex(where: {$0.title == NutritionValue.calories.title}) else { return 0 }
+        guard let calorieIndex = nutrition?.nutrients.firstIndex(where: {$0.title == NutritionValue.calories.jsonKey}) else { return 0 }
         return nutrition?.nutrients[calorieIndex].amount ?? 0
     }
 
@@ -38,7 +34,7 @@ class RecipeDetailTitleCell: UICollectionViewCell {
     }()
     
     var carbsValue: Float {
-        guard let carbsIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.carbohydrates.title}) else { return 0 }
+        guard let carbsIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.carbohydrates.jsonKey}) else { return 0 }
         return nutrition?.nutrients[carbsIndex].amount ?? 0
     }
 
@@ -48,7 +44,7 @@ class RecipeDetailTitleCell: UICollectionViewCell {
     }()
     
     var proteinValue: Float {
-        guard let proteinIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.protein.title}) else { return 0 }
+        guard let proteinIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.protein.jsonKey}) else { return 0 }
         return nutrition?.nutrients[proteinIndex].amount ?? 0
     }
 
@@ -58,7 +54,7 @@ class RecipeDetailTitleCell: UICollectionViewCell {
     }()
     
     var fatValue: Float {
-        guard let fatIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.fat.title}) else { return 0 }
+        guard let fatIndex = nutrition?.nutrients.firstIndex(where: { $0.title == NutritionValue.fat.jsonKey}) else { return 0 }
         return nutrition?.nutrients[fatIndex].amount ?? 0
     }
     
@@ -69,6 +65,39 @@ class RecipeDetailTitleCell: UICollectionViewCell {
         stackView.distribution = .equalSpacing
         stackView.spacing = 16
         return stackView
+    }()
+    
+    let recipeTitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 2
+        label.minimumScaleFactor = 0.5
+        label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
+        label.font = UIFont(name: Theme.recipeTitleFontName, size: 25)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    let creditsTextLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 2
+        label.minimumScaleFactor = 0.5
+        label.lineBreakMode = .byWordWrapping
+        label.textAlignment = .center
+        label.font = UIFont(name: Theme.titleFontName, size: 16)
+        label.textColor = Theme.backgroundColor
+        return label
+    }()
+    
+    let creditsTitleButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.titleLabel?.font = UIFont(name: Theme.titleFontName, size: 16)
+        button.titleLabel?.numberOfLines = 2
+        button.titleLabel?.minimumScaleFactor = 0.5
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        button.titleLabel?.textAlignment = .center
+        button.setTitleColor(.lightGray, for: .normal)
+        return button
     }()
     
     
@@ -129,8 +158,6 @@ class RecipeDetailTitleCell: UICollectionViewCell {
         return stackView
     }()
     
-    
-    
     override init(frame: CGRect) {
         super .init(frame: frame)
 
@@ -139,37 +166,22 @@ class RecipeDetailTitleCell: UICollectionViewCell {
     
     private func setupView() {
 
-        nutritionLabelStackView.addArrangedSubview(calorieNutritionalView)
-        nutritionLabelStackView.addArrangedSubview(carbsNutritionalView)
-        nutritionLabelStackView.addArrangedSubview(proteinNutritionalView)
-        nutritionLabelStackView.addArrangedSubview(fatNutritionalView)
+        [calorieNutritionalView, carbsNutritionalView, proteinNutritionalView, fatNutritionalView].forEach { nutritionLabelStackView.addArrangedSubview($0)}
+        [servingsImg, servingsLabel].forEach { servingsLabelStackView.addArrangedSubview($0) }
+        [timingImg, timingLabel].forEach { timingLabelStackView.addArrangedSubview($0) }
+        [servingsLabelStackView, timingLabelStackView].forEach { timingServingStackView.addArrangedSubview($0) }
+        [recipeTitleLabel, creditsTitleButton, nutritionLabelStackView, timingServingStackView].forEach { addSubview($0) }
         
-        servingsLabelStackView.addArrangedSubview(servingsImg)
-        servingsLabelStackView.addArrangedSubview(servingsLabel)
-        timingLabelStackView.addArrangedSubview(timingImg)
-        timingLabelStackView.addArrangedSubview(timingLabel)
+        servingsImg.anchor(top: nil, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 15, height: 15))
+        timingImg.anchor(top: nil, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 15, height: 15))
         
-        timingServingStackView.addArrangedSubview(servingsLabelStackView)
-        timingServingStackView.addArrangedSubview(timingLabelStackView)
+        recipeTitleLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor)
+//        creditsTextLabel.anchor(top: recipeTitleLabel.bottomAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0))
+        creditsTitleButton.anchor(top: recipeTitleLabel.bottomAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0))
+        timingServingStackView.anchor(top: creditsTitleButton.bottomAnchor, leading: leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 14, left: 0, bottom: 0, right: 0))
+        nutritionLabelStackView.anchor(top: timingServingStackView.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 18, left: 0, bottom: 0, right: 0))
+        nutritionLabelStackView.centerInSuperview()
         
-        nutritionLabelStackView.translatesAutoresizingMaskIntoConstraints = false
-        servingsLabelStackView.translatesAutoresizingMaskIntoConstraints = false
-        timingLabelStackView.translatesAutoresizingMaskIntoConstraints = false
-        timingServingStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        addSubview(nutritionLabelStackView)
-        addSubview(timingServingStackView)
-        
-        NSLayoutConstraint.activate([
-            servingsImg.widthAnchor.constraint(equalToConstant: 15),
-            servingsImg.heightAnchor.constraint(equalToConstant: 15),
-            timingImg.widthAnchor.constraint(equalToConstant: 15),
-            timingImg.heightAnchor.constraint(equalToConstant: 15),
-            nutritionLabelStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            nutritionLabelStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            timingServingStackView.topAnchor.constraint(equalTo: topAnchor),
-            timingServingStackView.leadingAnchor.constraint(equalTo: leadingAnchor)
-        ])
     }
     
     required init?(coder: NSCoder) {

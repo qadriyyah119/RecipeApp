@@ -17,8 +17,8 @@ struct RecipeDetailModel: Decodable {
     let image: String?
     let nutrition: Nutrition?
     let dishTypes: [String]?
-    let instructions: String
-    let analyzedInstructions: [AnalyzedInstructions]
+    let instructions: String?
+    let analyzedInstructions: [AnalyzedInstructions]?
 }
 
 struct Nutrition: Decodable {

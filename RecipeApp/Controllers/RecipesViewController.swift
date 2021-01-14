@@ -7,17 +7,14 @@
 
 import UIKit
 
-class RecipesViewController: UICollectionViewController, UISearchControllerDelegate, UISearchBarDelegate, UISearchResultsUpdating{
+class RecipesViewController: UICollectionViewController{
   
+  @IBOutlet weak var SearchRecipesBtn: UIBarButtonItem!
+    
   private let reuseIdentifier = "RecipeCell"
   let apiClient = ApiClient()
   var recipes = [RecipeModel]()
-  var searches: [RecipeModel] = []
-  var recipeDetails: RecipeDetailModel!
   private let itemsPerRow: CGFloat = 2
-  
-  //initializing UISearchController with nil, I'm telling the search controller that I'm using the same view to search and display the results
-  let searchController = UISearchController(searchResultsController: nil)
   
   private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
 
@@ -29,20 +26,9 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
 
         // Register cell classes
 //        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "RecipeCell")
-
-        searchController.delegate = self
-        searchController.searchBar.delegate = self
-        searchController.searchResultsUpdater = self
-        
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.obscuresBackgroundDuringPresentation = false
-        
-        searchController.searchBar.placeholder = "Search Recipes"
         
         navigationItem.backButtonTitle = ""
 //        navigationController?.navigationBar.tintColor = Theme.tintColor
-        navigationItem.searchController = searchController
-        definesPresentationContext = true
     }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -53,7 +39,7 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(true)
     
-    apiClient.loadRandomRecipes(9) { (result) in
+    apiClient.loadRandomRecipes(10) { (result) in
       switch result {
       case .failure(let error):
         print("Error loading: \(error)")
@@ -66,21 +52,14 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
       }
     }
   }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
   
-  var isSearchBarEmpty: Bool {
-    return searchController.searchBar.text?.isEmpty ?? true
-  }
-
+    @IBAction func SearchRecipesBtn(_ sender: UIBarButtonItem) {
+        let storyboard = UIStoryboard(name: "RecipeSearch", bundle: nil)
+        if let searchVC = storyboard.instantiateViewController(withIdentifier: "SearchVCID") as? SearchViewController {
+            self.navigationController?.pushViewController(searchVC, animated: true)
+        }
+    }
+    
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -113,7 +92,7 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
             }
           }
         }
-      }else {
+      } else {
         cell.imageView.image = UIImage(named: "imagePlaceholdeer")
       }
         return cell
@@ -137,12 +116,6 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
                 }
             }
         }
-        
-//        let detailVC = RecipeDetailVC()
-//        detailVC.recipe = recipeId
-//        navigationController?.pushViewController(detailVC, animated: true)
-        
-        
     }
 
     /*
@@ -173,28 +146,6 @@ class RecipesViewController: UICollectionViewController, UISearchControllerDeleg
     
     }
     */
-  
-  
-  func searchText(_ searchText: String) {
-    apiClient.search(searchText) { (result) in
-      switch result {
-      case .failure(let error):
-        print("Error Searching: \(error)")
-      case .success(let recipes):
-        print("Found \(recipes.count) matching \(searchText)")
-        self.searches.insert(contentsOf: recipes, at: 0)
-        
-//        DispatchQueue.main.async{
-//        self.collectionView?.reloadData()
-//        }
-      }
-    }
-  }
-  
-  func updateSearchResults(for searchController: UISearchController) {
-    let searchBar = searchController.searchBar
-    searchText(searchBar.text!)
-  }
 
 }
 
@@ -206,7 +157,7 @@ extension RecipesViewController: UICollectionViewDelegateFlowLayout {
     let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
     let availableWidth = view.frame.width - paddingSpace
     let widthPerItem = availableWidth / itemsPerRow
-    let heightPerItem = widthPerItem + 3
+    let heightPerItem = widthPerItem + 7
     
     return CGSize(width: widthPerItem, height: heightPerItem)
   }

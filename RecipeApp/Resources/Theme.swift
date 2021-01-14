@@ -8,6 +8,7 @@
 import UIKit
 
 class Theme {
+    static let recipeTitleFontName = "AvenirNextCondensed-Bold"
     static let titleFontName = "AvenirNextCondensed-Medium"
     static let mainFontName = "ArialMT"
     static let tintColor = UIColor(named: "Tint")

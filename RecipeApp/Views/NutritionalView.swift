@@ -18,6 +18,15 @@ enum NutritionValue {
         case .fat: return "Fat"
         }
     }
+    
+    var jsonKey: String {
+        switch self {
+        case .calories: return "Calories"
+        case .carbohydrates: return "Carbohydrates"
+        case .protein: return "Protein"
+        case .fat: return "Fat"
+        }
+    }
 }
 
 class NutritionalView: UIView {
@@ -43,7 +52,7 @@ class NutritionalView: UIView {
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.alignment = .center
-        stackView.spacing = 5
+        stackView.spacing = 2
         return stackView
     }()
 
@@ -64,7 +73,10 @@ class NutritionalView: UIView {
         self.backgroundColor = UIColor.white
         layer.borderColor = Theme.accentColor?.cgColor
         layer.borderWidth = 1
-        layer.cornerRadius = 40
+        layer.cornerRadius = 35
+        
+        nutritionValue.text = "\(value)"
+        nutritionTitle.text = valueTitle.title
         
         nutritionStackView.addArrangedSubview(nutritionValue)
         nutritionStackView.addArrangedSubview(nutritionTitle)
@@ -73,8 +85,8 @@ class NutritionalView: UIView {
         addSubview(nutritionStackView)
         
         NSLayoutConstraint.activate([
-            self.widthAnchor.constraint(equalToConstant: 80),
-            self.heightAnchor.constraint(equalToConstant: 80),
+            self.widthAnchor.constraint(equalToConstant: 70),
+            self.heightAnchor.constraint(equalToConstant: 70),
             nutritionStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             nutritionStackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
