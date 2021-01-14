@@ -122,12 +122,15 @@ class ApiClient {
       task.resume()
     }
     
-  func searchRecipeById(_ id: Int, completion: ((Result<RecipeModel, RecipeError>) -> Void)?) {
+  func searchRecipeById(_ id: Int, completion: ((Result<RecipeDetailModel, RecipeError>) -> Void)?) {
     var searchByIdURL: URL {
         var components = URLComponents()
         components.scheme = scheme
         components.host = host
         components.path = "/recipes/\(id)/information"
+        components.queryItems = [
+          URLQueryItem(name: "includeNutrition", value: "true")
+        ]
         
         print(components.url!)
         return components.url!
@@ -157,7 +160,7 @@ class ApiClient {
   
       let decoder = JSONDecoder()
       do{
-      let recipe = try decoder.decode(RecipeModel.self, from: data)
+      let recipe = try decoder.decode(RecipeDetailModel.self, from: data)
         completion?(.success(recipe))
       } catch let exception {
         print(exception.localizedDescription)
@@ -166,6 +169,55 @@ class ApiClient {
     }
     task.resume()
   }
+    
+    func autoCompleteRecipeSearch(_ query: String, completion:((Result<[AutoCompleteSearchResults], Error>) -> Void)?) {
+        var searchURL: URL {
+            var components = URLComponents()
+            components.scheme = scheme
+            components.host = host
+            components.path = "/recipes/autocomplete"
+            components.queryItems = [
+              URLQueryItem(name: "query", value: query),
+              URLQueryItem(name: "number", value: "20")
+            ]
+            
+            print(components.url!)
+            return components.url!
+          }
+        let request = NSMutableURLRequest(url: searchURL)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.waitsForConnectivity = true
+        let session = URLSession(configuration: configuration)
+        
+        let task = session.dataTask(with: request as URLRequest) {
+          
+          (data, response, error) in
+          
+          guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            completion?(.failure(RecipeError.invalidStatus))
+            return
+          }
+          
+          guard let data = data else {
+            completion?(.failure(RecipeError.invalidData))
+            
+            return
+          }
+      
+          let decoder = JSONDecoder()
+          do{
+          let recipes = try decoder.decode([AutoCompleteSearchResults].self, from: data)
+            completion?(.success(recipes))
+          } catch let exception {
+            print(exception.localizedDescription)
+            completion?(.failure(RecipeError.decodingError))
+          }
+        }
+        task.resume()
+    }
   
   func downloadRecipeImage(_ imageURL: String, completion:((Result<UIImage?, RecipeError>) -> Void)?) {
     if let url = URL(string: imageURL) {

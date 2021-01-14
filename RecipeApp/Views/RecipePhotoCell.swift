@@ -8,14 +8,17 @@
 import UIKit
 
 class RecipePhotoCell: UICollectionViewCell {
-  @IBOutlet weak var imageView: UIImageView!
-  @IBOutlet weak var recipeTitleLabel: UILabel!
+    @IBOutlet weak var tileView: UIView!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var recipeTitleLabel: UILabel!
+    @IBOutlet weak var saveButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
         imageView.addRoundedCornersAndShadow()
-        recipeTitleLabel.textColor = UIColor.black 
+        recipeTitleLabel.font = UIFont(name: Theme.mainFontName, size: 14)
+        recipeTitleLabel.textColor = UIColor.black
     }
     
 }

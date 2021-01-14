@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Search View Controller-->
+        <scene sceneID="r1C-RK-YV4">
+            <objects>
+                <viewController storyboardIdentifier="SearchVCID" id="C2h-PE-wFA" customClass="SearchViewController" customModule="RecipeApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Rn3-ot-BIz">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jOC-6J-5Bs">
+                                <rect key="frame" x="0.0" y="100" width="414" height="762"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="resultsCell" id="ZE7-qT-Cwf" customClass="SearchResultsCell" customModule="RecipeApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ZE7-qT-Cwf" id="gHC-Z3-pbb">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Search Result" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7RN-GO-rcJ">
+                                                    <rect key="frame" x="20" y="12" width="374" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="resultsTitleLabel" destination="7RN-GO-rcJ" id="ikj-hX-bAj"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <searchBar contentMode="redraw" placeholder="What are you craving?" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RWE-uH-vEf">
+                                <rect key="frame" x="0.0" y="44" width="414" height="56"/>
+                                <textInputTraits key="textInputTraits" spellCheckingType="yes" returnKeyType="go"/>
+                                <scopeButtonTitles>
+                                    <string>Title</string>
+                                    <string>Title</string>
+                                </scopeButtonTitles>
+                            </searchBar>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="OHE-BW-PH4"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="RWE-uH-vEf" firstAttribute="top" secondItem="OHE-BW-PH4" secondAttribute="top" id="15i-P2-vCY"/>
+                            <constraint firstItem="jOC-6J-5Bs" firstAttribute="leading" secondItem="OHE-BW-PH4" secondAttribute="leading" id="3g7-Ph-BJQ"/>
+                            <constraint firstItem="OHE-BW-PH4" firstAttribute="trailing" secondItem="jOC-6J-5Bs" secondAttribute="trailing" id="Aw1-2M-sb8"/>
+                            <constraint firstItem="OHE-BW-PH4" firstAttribute="bottom" secondItem="jOC-6J-5Bs" secondAttribute="bottom" id="OJw-H2-hvT"/>
+                            <constraint firstItem="jOC-6J-5Bs" firstAttribute="top" secondItem="RWE-uH-vEf" secondAttribute="bottom" id="jni-0n-sjf"/>
+                            <constraint firstItem="RWE-uH-vEf" firstAttribute="leading" secondItem="OHE-BW-PH4" secondAttribute="leading" id="mEB-Vf-3Nl"/>
+                            <constraint firstItem="RWE-uH-vEf" firstAttribute="trailing" secondItem="OHE-BW-PH4" secondAttribute="trailing" id="wOY-rZ-tJm"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="n29-ft-Uw4"/>
+                    <connections>
+                        <outlet property="searchBar" destination="RWE-uH-vEf" id="63J-cA-YJr"/>
+                        <outlet property="tableView" destination="jOC-6J-5Bs" id="VbR-yX-EnW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="smp-VK-DIT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="491.304347826087" y="71.651785714285708"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

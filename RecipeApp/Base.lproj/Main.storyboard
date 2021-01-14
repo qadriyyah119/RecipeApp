@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4Ud-Z7-DSs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4Ud-Z7-DSs">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Recipes View Controller-->
+        <!--Recipes-->
         <scene sceneID="TDh-uf-4kL">
             <objects>
                 <collectionViewController id="Uus-nb-bXO" customClass="RecipesViewController" customModule="RecipeApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -16,42 +17,62 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="KDB-nb-woe">
-                            <size key="itemSize" width="200" height="200"/>
+                            <size key="itemSize" width="200" height="217"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="RecipeCell" id="15e-Hc-E5S" customClass="RecipePhotoCell" customModule="RecipeApp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="217"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="GbX-Zn-1fI">
-                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="200" height="217"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rNH-SN-PF7">
-                                            <rect key="frame" x="0.0" y="0.0" width="200" height="173.5"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="In9-Ku-hJn">
+                                            <rect key="frame" x="8" y="0.0" width="192" height="215"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        </view>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="rNH-SN-PF7">
+                                            <rect key="frame" x="8" y="0.0" width="184" height="175"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recipe Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FvC-1V-cI0">
-                                            <rect key="frame" x="4" y="181.5" width="192" height="16.5"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Recipe Title" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FvC-1V-cI0">
+                                            <rect key="frame" x="8" y="183" width="184" height="30"/>
                                             <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="14"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g8u-ks-35b">
+                                            <rect key="frame" x="164" y="147" width="29" height="28"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="28" id="5IN-Pa-PKA"/>
+                                                <constraint firstAttribute="width" constant="28" id="k3C-y9-RTA"/>
+                                            </constraints>
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <state key="normal" image="heart" catalog="system"/>
+                                        </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="rNH-SN-PF7" firstAttribute="leading" secondItem="GbX-Zn-1fI" secondAttribute="leading" id="YGK-6Z-pEF"/>
-                                        <constraint firstAttribute="trailing" secondItem="rNH-SN-PF7" secondAttribute="trailing" id="gIw-bN-vMq"/>
-                                        <constraint firstAttribute="trailing" secondItem="FvC-1V-cI0" secondAttribute="trailing" constant="4" id="sQj-MO-bfn"/>
-                                        <constraint firstItem="FvC-1V-cI0" firstAttribute="leading" secondItem="GbX-Zn-1fI" secondAttribute="leading" constant="4" id="t03-zt-bze"/>
-                                        <constraint firstAttribute="bottom" secondItem="FvC-1V-cI0" secondAttribute="bottom" constant="2" id="v4l-GH-gDB"/>
-                                        <constraint firstItem="FvC-1V-cI0" firstAttribute="top" secondItem="rNH-SN-PF7" secondAttribute="bottom" constant="8" symbolic="YES" id="xsA-7D-mvz"/>
-                                        <constraint firstItem="rNH-SN-PF7" firstAttribute="top" secondItem="GbX-Zn-1fI" secondAttribute="top" id="yd9-7r-ETE"/>
+                                        <constraint firstItem="FvC-1V-cI0" firstAttribute="leading" secondItem="In9-Ku-hJn" secondAttribute="leading" id="1ZZ-Tx-2Pb"/>
+                                        <constraint firstAttribute="trailing" secondItem="FvC-1V-cI0" secondAttribute="trailing" constant="8" id="8WG-wE-Dd8"/>
+                                        <constraint firstItem="g8u-ks-35b" firstAttribute="trailing" secondItem="FvC-1V-cI0" secondAttribute="trailing" id="K4i-QF-AYk"/>
+                                        <constraint firstItem="In9-Ku-hJn" firstAttribute="top" secondItem="rNH-SN-PF7" secondAttribute="top" id="QE8-qq-x6U"/>
+                                        <constraint firstItem="rNH-SN-PF7" firstAttribute="bottom" secondItem="g8u-ks-35b" secondAttribute="bottom" id="UUE-Qa-3Er"/>
+                                        <constraint firstAttribute="trailing" secondItem="In9-Ku-hJn" secondAttribute="trailing" id="nvS-o8-NR7"/>
+                                        <constraint firstItem="FvC-1V-cI0" firstAttribute="leading" secondItem="GbX-Zn-1fI" secondAttribute="leading" constant="8" id="oOH-rc-QvV"/>
+                                        <constraint firstItem="In9-Ku-hJn" firstAttribute="leading" secondItem="rNH-SN-PF7" secondAttribute="leading" id="rxA-Jy-VSW"/>
+                                        <constraint firstAttribute="bottom" secondItem="FvC-1V-cI0" secondAttribute="bottom" constant="4" id="wyq-TW-o7E"/>
+                                        <constraint firstAttribute="bottom" secondItem="In9-Ku-hJn" secondAttribute="bottom" constant="2" id="zFN-Ls-sof"/>
                                     </constraints>
                                 </collectionViewCellContentView>
+                                <size key="customSize" width="200" height="217"/>
                                 <connections>
                                     <outlet property="imageView" destination="rNH-SN-PF7" id="sr1-ND-sAd"/>
                                     <outlet property="recipeTitleLabel" destination="FvC-1V-cI0" id="ie7-xx-y8Z"/>
+                                    <outlet property="saveButton" destination="g8u-ks-35b" id="bYA-Ar-xCg"/>
+                                    <outlet property="tileView" destination="In9-Ku-hJn" id="n77-3I-FtL"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -60,7 +81,16 @@
                             <outlet property="delegate" destination="Uus-nb-bXO" id="q3f-tf-9o2"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="zVM-jm-GgC"/>
+                    <navigationItem key="navigationItem" title="Recipes" largeTitleDisplayMode="always" id="zVM-jm-GgC">
+                        <barButtonItem key="rightBarButtonItem" title="Seach Recipes" image="magnifyingglass" catalog="system" id="m6h-yS-zmh">
+                            <connections>
+                                <action selector="SearchRecipesBtn:" destination="Uus-nb-bXO" id="fSB-Fo-wrG"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="SearchRecipesBtn" destination="m6h-yS-zmh" id="2ib-Cp-PLg"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1ry-sw-y3V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -72,9 +102,13 @@
                 <navigationController storyboardIdentifier="NavController" automaticallyAdjustsScrollViewInsets="NO" id="Qx4-5w-LSZ" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" id="Pwg-tx-lq7"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="TeJ-gd-fSE">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="TeJ-gd-fSE">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <fontDescription key="fontDescription" name="AvenirNextCondensed-Medium" family="Avenir Next Condensed" pointSize="30"/>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -104,4 +138,11 @@
             <point key="canvasLocation" x="-175.36231884057972" y="26.785714285714285"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="heart" catalog="system" width="128" height="109"/>
+        <image name="magnifyingglass" catalog="system" width="128" height="115"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
